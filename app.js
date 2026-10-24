@@ -1,8 +1,8 @@
-/* 올케어에듀 오답 입력 · 학습 현황 — 화면만 여기(깃허브)에 있고, 저장·집계는 반별 Apps Script가 합니다. */
+/* 올케어에듀 오답 입력 · 학습 현황 — 화면만 여기(깃허브)에 있고, 저장·집계는 반별 Apps Script가 합니다. (v2: 강사용 ?a= 지원) */
 (function () {
   var API = window.API;
   var q = new URLSearchParams(location.search);
-  var s = q.get('s') || '', p = q.get('p') || '';
+  var s = q.get('s') || '', p = q.get('p') || '', a = q.get('a') || '', v = q.get('v') || '';
   var box = document.getElementById('msg');
 
   function show(html) { box.innerHTML = html; }
@@ -11,7 +11,7 @@
          '<button onclick="location.reload()" style="margin-top:14px;border:0;background:#4E2A84;color:#fff;' +
          'padding:13px 26px;border-radius:12px;font-size:16px;font-weight:700">다시 열기</button>');
   }
-  if (!s && !p) { fail('링크가 올바르지 않아요.<br>학원에서 받은 <b>본인 전용 링크</b>로 들어와 주세요.'); return; }
+  if (!s && !p && !a) { fail('링크가 올바르지 않아요.<br>학원에서 받은 <b>본인 전용 링크</b>로 들어와 주세요.'); return; }
 
   // google.script.run 대신 fetch 로 저장 요청을 보냅니다 (페이지 코드는 그대로 씀)
   var SHIM = '(function(){var API=' + JSON.stringify(API) + ';' +
@@ -26,7 +26,7 @@
     '.catch(function(){no&&no(new Error("인터넷 연결을 확인하고 다시 눌러 주세요"))});};}})}' +
     'window.google={script:{run:mk(null,null)}};})();';
 
-  var url = API + '?api=1&' + (p ? 'p=' + encodeURIComponent(p) : 's=' + encodeURIComponent(s));
+  var url = API + '?api=1&' + (a ? 'a=' + encodeURIComponent(a) + (v ? '&v=' + encodeURIComponent(v) : '') : p ? 'p=' + encodeURIComponent(p) : 's=' + encodeURIComponent(s));
   var tries = 0;
   (function go() {
     tries++;
