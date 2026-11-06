@@ -48,9 +48,11 @@ html,body{margin:0;height:100%;background:#f5f6f8;color:#1d2433;font-family:-app
     tries = tries || 0;
     try {
       var d = fr.contentDocument, br = d && d.querySelector('.brand'), bs = d && d.querySelectorAll('.subj button');
-      if (br) br.style.display = 'none';   // 로고 띠는 위에 한 번만
+      if (br && !d.getElementById('hubcss')) {   // 로고 띠·앱 안 과목 탭은 위에서 한 번만 (다시 그려져도 숨김)
+        var st = d.createElement('style'); st.id = 'hubcss'; st.textContent = '.brand,.subj{display:none!important}';
+        (d.head || d.body).appendChild(st);
+      }
       if (bs && bs.length) {
-        var bar = d.querySelector('.subj'); if (bar) bar.style.display = 'none';
         for (var i = 0; i < bs.length; i++) if (bs[i].textContent.trim() === name && !bs[i].classList.contains('on')) bs[i].click();
         return;
       }
